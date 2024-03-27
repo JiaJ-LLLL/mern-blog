@@ -21,7 +21,7 @@ const defaultProps = {};
  * 
  */
 const SignIn = () => {
-    return <div></div>;
+    return <div>Sign In</div>;
 }
 
 // #endregion
