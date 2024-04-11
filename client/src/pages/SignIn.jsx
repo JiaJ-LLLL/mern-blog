@@ -3,14 +3,19 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
+// redux
+import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 /**
  * 
  */
 const SignIn = () => {
     const [formData, setFormData] = useState({});
-    const [errorMessage, setErrorMessage] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+
+    // redux
+    const dispatch = useDispatch();
+    const {isLoading, error: errorMessage} = useSelector(state => state.user);
 
     const handleChange = (event) => {
         setFormData({...formData, [event.target.id]: event.target.value.trim()});
@@ -18,14 +23,14 @@ const SignIn = () => {
     console.log(formData);
 
     const handleSubmit = async(event) => {
-        setIsLoading(true);
-        setErrorMessage(null);
         // prevent the page from refreshing
         event.preventDefault();
         if (!formData.email || !formData.password) {
-            return setErrorMessage('Please fill out all fields');
+            // return setErrorMessage('Please fill out all fields');
+            dispatch(signInFailure('Please fill out all fields'));
         }
         try {
+            dispatch(signInStart());
             const res = await fetch('/api/auth/signin', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -33,15 +38,14 @@ const SignIn = () => {
             });
             const data = await res.json();
             if (data.success === false) {
-                return setErrorMessage(data.message);
+                dispatch(signInFailure(data.message));
             }
-            setIsLoading(false);
             if (res.ok) {
+                dispatch(signInSuccess(data))
                 navigate('/');
             }
         } catch (error) {
-            setErrorMessage(data.message);
-            setIsLoading(false);
+            dispatch(signInFailure(data.message));
         }
 
     }
