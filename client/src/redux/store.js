@@ -17,8 +17,6 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-
-
 // Redux is a JS library for predictable and maintainable global state management.
 export const store = configureStore({
   reducer: persistedReducer,

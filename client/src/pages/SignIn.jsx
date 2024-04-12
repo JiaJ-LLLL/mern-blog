@@ -6,6 +6,7 @@ import { useState } from 'react';
 // redux
 import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import OAuth from '../components/OAuth';
 /**
  * 
  */
@@ -83,10 +84,12 @@ const SignIn = () => {
                                     <Spinner size='sm' />
                                     <span className='pl-3'>Loading...</span>
                                    </>
-                                ) :'Sign Up'
+                                ) :'Sign In'
                             }
                         </Button>
+                        <OAuth />
                     </form>
+                
                     <div className='flex gap-2 text-sm mt-5'>
                         <span>Don't have an account?</span>
                         <Link to='/sign-up' className='text-blue-500'>
