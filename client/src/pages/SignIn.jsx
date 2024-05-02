@@ -13,7 +13,6 @@ import OAuth from '../components/OAuth';
 const SignIn = () => {
     const [formData, setFormData] = useState({});
     const navigate = useNavigate();
-
     // redux
     const dispatch = useDispatch();
     const {isLoading, error: errorMessage} = useSelector(state => state.user);
