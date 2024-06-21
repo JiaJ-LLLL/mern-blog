@@ -11,7 +11,7 @@ import { toggleTheme } from '../redux/theme/themeSlice'
  */
 const Header = () => {
     const path = useLocation().pathname;
-    const {currentUser} = useSelector(state => state.user);
+    const {currentUser} = useSelector((state) => state.user);
     const dispatch = useDispatch();
     const {theme} = useSelector((state) => state.theme);
     return (
@@ -42,7 +42,7 @@ const Header = () => {
                         arrowIcon={false}
                         inline
                         label={
-                            <Avatar alt='user' img={currentUser.profilePicture}/>
+                            <Avatar alt='user' img={currentUser.profilePicture} rounded/>
                         }
                         rounded
                     >
