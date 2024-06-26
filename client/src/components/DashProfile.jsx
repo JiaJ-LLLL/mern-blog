@@ -7,6 +7,9 @@ import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
+import { updateStart, updateSuccess, updateFailure } from '../redux/user/userSlice';
+import { useDispatch } from 'react-redux';
+
 export default function DashProfile() {
   const {currentUser} = useSelector(state => state.user);
   const [imageFile, setImageFile] = useState(null);
@@ -15,10 +18,18 @@ export default function DashProfile() {
   const [imageUploadingProgress, setImageUploadingProgress] = useState(null);
   const [imageUploadingError, setImageUploadingError] = useState(null);
 
+  const [formData, setFormData] = useState({});
+
+  const [imageIsUploading, setImageIsUploading] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const [updateProfileSuccess, setUpdateProfileSuccess] = useState(null);
+  const [updateProfileFail, setUpdateProfileFail] = useState(null);
+
   // console.log(imageUploadingProgress, imageUploadingError);
 
   const handleImageChange = (event) => {
-  
     const file = event.target.files[0];
     if (file) {
       setImageFile(file);
@@ -36,6 +47,7 @@ export default function DashProfile() {
   // use firebase to store images because integrating with CDN (allows faster deliver of files), only authenticated users to upload and access their profile pictures. 
   const uploadImage = async () => {
     setImageUploadingError(null);
+    setImageIsUploading(true);
     const storage = getStorage(app);
     // add Date to make the image name unique for preventing duplicate image
     const fileName = new Date().getTime() + imageFile.name;
@@ -57,13 +69,59 @@ export default function DashProfile() {
         setImageUploadingProgress(null);
         setImageFile(null);
         setImageFileUrl(null);
+        setImageIsUploading(false);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
           setImageFileUrl(downloadUrl);
+          setFormData({...formData, profilePicture: downloadUrl});
+          setImageIsUploading(false);
         });
       }
     );
+  }
+
+  const handleChange = (e) => {
+    setUpdateProfileSuccess(null);
+    setUpdateProfileFail(null);
+    setFormData({...formData, [e.target.id]: e.target.value});
+  }
+
+  const handleClick = async(e) => {
+    e.preventDefault();
+    setUpdateProfileFail(null);
+    setUpdateProfileSuccess(null);
+    if (!formData) {
+      setUpdateProfileFail("No changes made")
+      return;
+    }
+    if (imageIsUploading) {
+      setUpdateProfileFail("Please wait for image to upload")
+      return;
+    }
+    try {
+      // udpate the redux 
+      dispatch(updateStart());
+      // update the database
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json();
+      if (res.ok) {
+        dispatch(updateSuccess(data));
+        setUpdateProfileSuccess("User's profile updated succesfully");
+      } else {
+        dispatch(updateFailure(data.message));
+        setUpdateProfileFail(data.message);
+      }
+    } catch (error) {
+      dispatch(updateFailure());
+    }
+
   }
 
 
@@ -87,10 +145,12 @@ export default function DashProfile() {
           <img src = {imageFileUrl || currentUser.profilePicture} alt="user" className={`rounded-full w-full h-full object-cover border-8 border-[lightgray] ${imageUploadingProgress && imageUploadingProgress < 100 && 'opacity-60'}`} />
         </div>
         {imageUploadingError && <Alert color='failure'>{imageUploadingError}</Alert>}
-        <TextInput type='text' id='username' placeholder='username' defaultValue={currentUser.username}/>
-        <TextInput type='email' id='email' placeholder='email' defaultValue={currentUser.email}/>
-        <TextInput type='password' id='password' placeholder='password' />
-        <Button type='submit' gradientDuoTone='purpleToBlue' outline> 
+        {updateProfileSuccess && <Alert color='success'>{updateProfileSuccess}</Alert>}
+        {updateProfileFail && <Alert color='failure'>{updateProfileFail}</Alert>}
+        <TextInput type='text' id='username' placeholder='username' defaultValue={currentUser.username} onChange={handleChange}/>
+        <TextInput type='email' id='email' placeholder='email' defaultValue={currentUser.email} onChange={handleChange}/>
+        <TextInput type='password' id='password' placeholder='password' onChange={handleChange}/>
+        <Button onClick={handleClick} type='submit' gradientDuoTone='purpleToBlue' outline> 
           Update
         </Button>
       </form>

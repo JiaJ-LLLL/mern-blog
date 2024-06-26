@@ -35,23 +35,24 @@ export const updateUser = async(req, res, next) => {
         if (!username.match(/^[a-zA-Z0-9]+$/)) {
             return next(errorHandler(400, 'Username name can only contain letters and numbers'));
         }
-        try {
-            // doesn't check for duplicate username
-            // doesn't add same restriction when user sign up
-            const updatedUser = await User.findByIdAndUpdate(req.params.userId, {
-                $set: {
-                    // set will update what included below
-                    username: req.body.username,
-                    email: req.body.email,
-                    password: req.body.password,
-                    profilePicture: req.body.profilePicture
-                }
-            }, {new: true});
-            const {password, ...rest} = updatedUser._doc;
-            res.status(200).json(rest);
-        } catch (error) {
-            next(error);
-        }
+    }
+
+    try {
+        // doesn't check for duplicate username
+        // doesn't add same restriction when user sign up
+        const updatedUser = await User.findByIdAndUpdate(req.params.userId, {
+            $set: {
+                // set will update what included below
+                username: req.body.username,
+                email: req.body.email,
+                password: req.body.password,
+                profilePicture: req.body.profilePicture
+            }
+        }, {new: true});
+        const {password, ...rest} = updatedUser._doc;
+        res.status(200).json(rest);
+    } catch (error) {
+        next(error);
     }
 
 }
