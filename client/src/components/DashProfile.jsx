@@ -8,7 +8,7 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
-import { updateStart, updateSuccess, updateFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure } from '../redux/user/userSlice';
+import { updateStart, updateSuccess, updateFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure, singoutSuccess } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
 
 export default function DashProfile() {
@@ -144,6 +144,22 @@ export default function DashProfile() {
     }
   }
 
+  const handleSignout = async(e) => {
+    try {
+      const res = await fetch(`/api/user/signout`, {
+        method: 'POST'
+      });
+      const data = await res.json();
+      if (res.ok) {
+        dispatch(singoutSuccess());
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
 
   return (
     <div className='max-w-lg mx-auto p-3 w-full'>
@@ -177,7 +193,7 @@ export default function DashProfile() {
       </form>
       <div className='text-red-500 flex justify-between mt-5'>
         <span className='cursor-pointer' onClick={()=> {setShowModal(true)}}> Delete Acount</span>
-        <span className='cursor-pointer'> Sign Out</span>
+        <span className='cursor-pointer' onClick={handleSignout}> Sign Out</span>
       </div>
       <Modal show={showModal} onClose={()=>{setShowModal(false)}} popup size='md'>
         <Modal.Header />
