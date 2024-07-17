@@ -21,6 +21,7 @@ export const signup = async (req, res, next) => {
 
     try {
         // stop the execution of signup and await the newUser is saved 
+        // save: uses insert if there is no id for the object and create an id during operation. 
         await newUser.save();
         res.json({ message: 'Signup success.'});
     } catch (error) {
