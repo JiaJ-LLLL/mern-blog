@@ -12,6 +12,7 @@ import PrivateRoute from './components/PrivateRoute';
 import AdminPrivateRoute from './components/AdminPrivateRoute';
 import CreatePost from './pages/CreatePost';
 import UpdatePost from './pages/updatePost';
+import PostPage from './pages/PostPage';
 /**
  * 
  */
@@ -33,6 +34,7 @@ const App = () => {
           <Route path='/update-post/:postId' element={<UpdatePost />} />
         </Route>
         <Route path="/projects" element={<Projects />} />
+        <Route path="/post/:postSlug" element={<PostPage />} />
       </Routes>
       <Footer />
     </BrowserRouter>

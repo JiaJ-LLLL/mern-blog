@@ -21,6 +21,12 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
+app.use((req, res, next) => {
+    res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+    res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+    next();
+  });
+
 app.listen(3000, () => {
 
     console.log("Server is listening on port 3000!");
