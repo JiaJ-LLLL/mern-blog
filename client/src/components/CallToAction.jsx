@@ -19,7 +19,7 @@ export default function CallToAction() {
       </div>
 
       <div className='p-7 flex-2'>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Unofficial_JavaScript_logo_2.svg/1200px-Unofficial_JavaScript_logo_2.svg.png" />
+        <img src="https://bairesdev.mo.cloudinary.net/blog/2023/08/What-Is-JavaScript-Used-For.jpg" />
       </div>
     </div>
   )
