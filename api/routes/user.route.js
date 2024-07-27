@@ -1,6 +1,6 @@
 // Simply list of api and calls to the controller
 import express from 'express';
-import { getUsers, test } from '../controllers/user.controller.js';
+import { getUser, getUsers, test } from '../controllers/user.controller.js';
 import { updateUser, deleteUser, signout } from '../controllers/user.controller.js';
 import { verifyToken } from '../utils/verifyUser.js';
 
@@ -17,5 +17,6 @@ router.post('/signout', signout);
 
 router.get('/getusers', verifyToken, getUsers);
 
+router.get('/:userId', getUser);
 
 export default router;
