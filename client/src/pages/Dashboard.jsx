@@ -6,6 +6,7 @@ import DashProfile from '../components/DashProfile';
 import DashSidebar from '../components/DashSidebar.jsx';
 import DashPosts from '../components/DashPosts.jsx';
 import DashUsers from '../components/DashUsers';
+import DashComments from '../components/DashComments';
 export default function Dashboard() {
   const [tab, setTab] = useState('');
   const location = useLocation();
@@ -13,7 +14,6 @@ export default function Dashboard() {
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabFromUrl = urlParams.get('tab');
-    console.log(tabFromUrl);
     if (tabFromUrl) {
       setTab(tabFromUrl);
     }
@@ -28,6 +28,7 @@ export default function Dashboard() {
       {tab === 'profile' && <DashProfile/> }
       {tab === 'posts' && <DashPosts /> }
       {tab === 'users' && <DashUsers /> }
+      {tab === 'comments' && <DashComments /> }
     </div>
   )
 }
