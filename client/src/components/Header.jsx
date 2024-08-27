@@ -1,11 +1,11 @@
 import { Avatar, Button, Dropdown, Navbar, TextInput } from 'flowbite-react';
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaMoon, FaSun} from 'react-icons/fa'
 import { useSelector, useDispatch} from 'react-redux';
 import { toggleTheme } from '../redux/theme/themeSlice'
-import { singoutSuccess } from '../redux/user/userSlice';
+import { signoutSuccess } from '../redux/user/userSlice';
 
 /**
  * 
@@ -15,7 +15,17 @@ export default function Header () {
     const {currentUser} = useSelector((state) => state.user);
     const dispatch = useDispatch();
     const {theme} = useSelector((state) => state.theme);
+    const location = useLocation();
+    const [searchTerm, setSearchTerm] = useState('');
+    const navigate = useNavigate();
 
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search);
+        const searchTermFromUrl = urlParams.get('searchTerm');
+        if (searchTermFromUrl) {
+            setSearchTerm(searchTermFromUrl);
+        }
+    }, [location.search]);
 
     const handleSignout = async(e) => {
         try {
@@ -24,7 +34,7 @@ export default function Header () {
           });
           const data = await res.json();
           if (res.ok) {
-            dispatch(singoutSuccess());
+            dispatch(signoutSuccess());
           } else {
             console.log(data.message);
           }
@@ -33,6 +43,14 @@ export default function Header () {
         }
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const urlParams = new URLSearchParams(location.search);
+        urlParams.set('searchTerm', searchTerm);
+        const searchQuery = urlParams.toString();
+        navigate(`/search?${searchQuery}`);
+    };
+
 
     return (
         <Navbar className='border-b-2'>
@@ -40,12 +58,14 @@ export default function Header () {
                 <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>Jiajun's</span>
                 Blog
             </Link>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <TextInput 
                     type="text"
                     placeholder='Search...'
                     icon={ AiOutlineSearch }
                     className='hidden lg:inline'
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value) }
                 />
             </form>
             <Button className='w-12 h-10 lg:hidden' color='gray' pill>

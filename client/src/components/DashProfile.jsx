@@ -8,7 +8,7 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
-import { updateStart, updateSuccess, updateFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure, singoutSuccess } from '../redux/user/userSlice';
+import { updateStart, updateSuccess, updateFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure, signoutSuccess } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
 
 import { Link } from 'react-router-dom';
@@ -153,7 +153,7 @@ export default function DashProfile() {
       });
       const data = await res.json();
       if (res.ok) {
-        dispatch(singoutSuccess());
+        dispatch(signoutSuccess());
       } else {
         console.log(data.message);
       }

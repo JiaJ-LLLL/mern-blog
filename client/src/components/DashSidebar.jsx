@@ -2,7 +2,7 @@
 import { Sidebar } from 'flowbite-react';
 import { HiUser, HiArrowSmRight, HiDocumentText, HiOutlineUserGroup, HiAnnotation, HiChartPie } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
-import { singoutSuccess } from '../redux/user/userSlice';
+import { signoutSuccess } from '../redux/user/userSlice';
 import { useSelector, useDispatch} from 'react-redux';
 
 export default function DashSidebar(props) {
@@ -15,7 +15,7 @@ export default function DashSidebar(props) {
       });
       const data = await res.json();
       if (res.ok) {
-        dispatch(singoutSuccess());
+        dispatch(signoutSuccess());
       } else {
         console.log(data.message);
       }
