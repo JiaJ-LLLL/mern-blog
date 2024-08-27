@@ -1,31 +1,12 @@
-import React from 'react';
+import React from 'react'
+import CallToAction from '../components/CallToAction'
 
-// #region constants
-
-// #endregion
-
-// #region styled-components
-
-// #endregion
-
-// #region functions
-
-// #endregion
-
-// #region component
-const propTypes = {};
-
-const defaultProps = {};
-
-/**
- * 
- */
-const Projects = () => {
-    return <div>projects</div>;
+export default function Projects() {
+    return (
+        <div className='min-h-screen max-w-2xl mx-auto flex justify-center items-center flex-col gap-6 p-3'>
+          <h1 className='text-3xl font-semibold'>Pojects</h1>
+          <p className='text-md text-gray-500'>Build fun and engaging projects while learning HTML, CSS, and JavaScript!</p>
+          <CallToAction />
+        </div>
+      )
 }
-
-Projects.propTypes = propTypes;
-Projects.defaultProps = defaultProps;
-// #endregion
-
-export default Projects;
